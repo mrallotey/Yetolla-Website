@@ -1,3 +1,14 @@
+// Remove ChatGPT share-attribution from the visible address without reloading or losing the section anchor.
+try {
+  const cleanUrl = new URL(window.location.href);
+  if (cleanUrl.searchParams.get('utm_source') === 'chatgpt.com') {
+    cleanUrl.searchParams.delete('utm_source');
+    window.history.replaceState(window.history.state, '', cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+  }
+} catch (error) {
+  // URL cleanup is non-critical; keep the website usable if the browser blocks it.
+}
+
 const menu=document.querySelector('.menu'),nav=document.querySelector('.nav');menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));menu.textContent=open?'×':'☰'});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');menu.textContent='☰'}));
 const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}}),{threshold:.12});document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 document.getElementById('year').textContent=new Date().getFullYear();
